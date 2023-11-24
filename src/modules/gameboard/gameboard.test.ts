@@ -1,4 +1,4 @@
-import { describe, test, expect } from '@jest/globals';
+import { describe, test, expect, jest } from '@jest/globals';
 import Gameboard from './gameboard';
 import Ship from '../ship/ship';
 
@@ -93,5 +93,28 @@ describe('gameboard with sunk ships', () => {
 
   test('has all ships sunk', () => {
     expect(gameboard.allShipsAreSunk()).toBe(true);
+  });
+});
+
+describe('gameboard with randomly placed ships', () => {
+  const gameboard = new Gameboard();
+  const ships = [
+    new Ship(5),
+    new Ship(4),
+    new Ship(4),
+    new Ship(3),
+    new Ship(3),
+    new Ship(3),
+    new Ship(2),
+    new Ship(2),
+    new Ship(2),
+    new Ship(2)
+  ];
+
+  const placeShip = jest.spyOn(gameboard, 'placeShip');
+  gameboard.placeShipsRandomly(ships);
+
+  test('has all ships placed', () => {
+    expect(placeShip).toHaveBeenCalledTimes(10);
   });
 });

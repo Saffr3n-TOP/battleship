@@ -62,6 +62,41 @@ export default class Gameboard {
     }
   }
 
+  placeShipsRandomly(ships: readonly Ship[]): void {
+    for (let i = 0; i < ships.length; i++) {
+      const ship = ships[i];
+      const shipLength = ship.length;
+      const orientation = this.randomOrientation();
+      const position = this.normalizePosition(
+        shipLength,
+        this.randomPosition(),
+        orientation
+      );
+
+      if (!this.positionIsAvailable(shipLength, position, orientation)) {
+        i--;
+        continue;
+      }
+
+      this.placeShip(ship, position, orientation);
+    }
+  }
+
+  private randomPosition(): GameboardPosition {
+    const x = Math.floor(Math.random() * this.size);
+    const y = Math.floor(Math.random() * this.size);
+
+    return [x, y] as GameboardPosition;
+  }
+
+  private randomOrientation(): ShipOrientation {
+    if (Math.floor(Math.random() * 2) === 0) {
+      return 'horizontal';
+    } else {
+      return 'vertical';
+    }
+  }
+
   private normalizePosition(
     shipLength: Ship['length'],
     position: GameboardPosition,
