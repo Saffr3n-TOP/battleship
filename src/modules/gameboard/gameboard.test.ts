@@ -96,7 +96,7 @@ describe('gameboard with sunk ships', () => {
   });
 });
 
-describe('gameboard with randomly placed ships', () => {
+describe('gameboard fully filled with sunk ships', () => {
   const gameboard = new Gameboard();
   const ships = [
     new Ship(5),
@@ -112,9 +112,23 @@ describe('gameboard with randomly placed ships', () => {
   ];
 
   const placeShip = jest.spyOn(gameboard, 'placeShip');
+  const receiveAttack = jest.spyOn(gameboard, 'receiveAttack');
+
   gameboard.placeShipsRandomly(ships);
+
+  while (!gameboard.allShipsAreSunk()) {
+    gameboard.receiveRandomAttack();
+  }
 
   test('has all ships placed', () => {
     expect(placeShip).toHaveBeenCalledTimes(10);
+  });
+
+  test('correctly receives random attacks', () => {
+    expect(receiveAttack).toHaveBeenCalled();
+  });
+
+  test('has all ships sunk', () => {
+    expect(gameboard.allShipsAreSunk()).toBe(true);
   });
 });

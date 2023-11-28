@@ -1,8 +1,8 @@
-import type Ship from '../ship/ship';
+import Ship from '../ship/ship';
 
 type ShipOrientation = 'horizontal' | 'vertical';
 type GameboardAxis = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-export type GameboardPosition = [GameboardAxis, GameboardAxis];
+type GameboardPosition = [GameboardAxis, GameboardAxis];
 
 interface GameboardCell {
   ship: Ship | null;
@@ -26,7 +26,34 @@ export default class Gameboard {
   }
 
   get(): GameboardCell[][] {
-    return structuredClone(this.gameboard);
+    const copy = new Array(this.size);
+
+    for (let i = 0; i < this.size; i++) {
+      copy[i] = new Array(this.size);
+
+      for (let j = 0; j < this.size; j++) {
+        const cell = this.gameboard[i][j];
+        const shipOrig = cell.ship;
+        const available = cell.available;
+        const hit = cell.hit;
+
+        if (shipOrig === null) {
+          copy[i][j] = { ship: shipOrig, available, hit };
+          continue;
+        }
+
+        const shipCopy = new Ship(shipOrig.length);
+        const hitsTaken = shipOrig.length - shipOrig.getHealth();
+
+        for (let k = 0; k < hitsTaken; k++) {
+          shipCopy.hit();
+        }
+
+        copy[i][j] = { ship: shipCopy, available, hit };
+      }
+    }
+
+    return copy;
   }
 
   placeShip(
@@ -132,12 +159,31 @@ export default class Gameboard {
     return true;
   }
 
-  receiveAttack(position: GameboardPosition): void {
+  receiveAttack(position: GameboardPosition): GameboardPosition {
     const [x, y] = position;
     const cell = this.gameboard[x][y];
+
     cell.hit = true;
-    if (cell.ship === null) return;
-    cell.ship.hit();
+
+    if (cell.ship !== null) {
+      cell.ship.hit();
+    }
+
+    return [x, y];
+  }
+
+  receiveRandomAttack(): GameboardPosition {
+    let x: GameboardAxis;
+    let y: GameboardAxis;
+    let cell: GameboardCell;
+
+    do {
+      x = Math.floor(Math.random() * this.size) as GameboardAxis;
+      y = Math.floor(Math.random() * this.size) as GameboardAxis;
+      cell = this.gameboard[x][y];
+    } while (cell.hit);
+
+    return this.receiveAttack([x, y]);
   }
 
   allShipsAreSunk(): boolean {
