@@ -2,7 +2,7 @@ import Ship from '../ship/ship';
 
 type ShipOrientation = 'horizontal' | 'vertical';
 type GameboardAxis = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-type GameboardPosition = [GameboardAxis, GameboardAxis];
+export type GameboardPosition = [GameboardAxis, GameboardAxis];
 
 interface GameboardCell {
   ship: Ship | null;
@@ -12,10 +12,16 @@ interface GameboardCell {
 
 export default class Gameboard {
   readonly size = 10;
-  private readonly gameboard: GameboardCell[][] = new Array(this.size);
+  private gameboard: GameboardCell[][];
   private readonly ships: Ship[] = [];
 
   constructor() {
+    this.create();
+  }
+
+  private create(): void {
+    this.gameboard = new Array(this.size);
+
     for (let i = 0; i < this.size; i++) {
       this.gameboard[i] = new Array(this.size);
 
@@ -90,6 +96,8 @@ export default class Gameboard {
   }
 
   placeShipsRandomly(ships: readonly Ship[]): void {
+    this.create();
+
     for (let i = 0; i < ships.length; i++) {
       const ship = ships[i];
       const shipLength = ship.length;
