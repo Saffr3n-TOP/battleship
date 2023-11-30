@@ -1,0 +1,134 @@
+@use 'vars' as *;
+
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: $global-line-height;
+
+  & * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  & .root {
+    padding: $root-padding;
+
+    & .heading {
+      font-weight: bold;
+      text-align: center;
+
+      &_primary {
+        margin: $h1-margin 0;
+        font-size: $h1-font-size;
+      }
+
+      &_secondary {
+        margin: $h2-margin 0;
+        font-size: $h2-font-size;
+      }
+    }
+
+    & .controls {
+      margin-top: 16px;
+      text-align: center;
+
+      & .button {
+        padding: 0.5rem 2rem;
+        border: 1px solid black;
+        border-radius: 16px;
+        background: #ddd;
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: bold;
+        cursor: pointer;
+
+        &:hover {
+          background: #bbb;
+        }
+      }
+    }
+
+    & .gameboard {
+      $gap: 32px;
+      $size-horizontal: calc((100vw - $root-padding * 2 - $gap) / 2);
+      $size-vertical: calc(
+        100vh - $h1-height - $h2-height - $root-padding * 2 - 40px - 1rem * 1.2
+      );
+
+      &__container {
+        display: grid;
+        justify-content: center;
+        grid-template-columns: repeat(2, $size-horizontal);
+        gap: $gap;
+
+        @media (min-width: calc($size-vertical * 2 + $root-padding * 2 + $gap)) {
+          grid-template-columns: repeat(2, $size-vertical);
+        }
+      }
+
+      &__player,
+      &__enemy {
+        display: grid;
+        grid-template-rows: auto $size-horizontal;
+
+        @media (min-width: calc($size-vertical * 2 + $root-padding * 2 + $gap)) {
+          grid-template-rows: auto $size-vertical;
+        }
+      }
+
+      &__enemy {
+        &
+          .gameboard__cell_pos:not(.gameboard__cell_hit):not(
+            .gameboard__cell_miss
+          ):hover {
+          background: #ddd;
+        }
+      }
+
+      display: grid;
+      grid-template-columns: auto repeat(10, 1fr);
+      grid-template-rows: auto repeat(10, 1fr);
+
+      &__cell {
+        display: grid;
+
+        &_col {
+          justify-content: center;
+          align-content: end;
+          border-bottom: 1px solid black;
+        }
+
+        &_row {
+          justify-content: end;
+          align-content: center;
+          border-right: 1px solid black;
+        }
+
+        &_col,
+        &_row {
+          font-weight: bold;
+        }
+
+        &_pos {
+          justify-content: center;
+          align-content: center;
+          border-right: 1px solid black;
+          border-bottom: 1px solid black;
+        }
+
+        &_ship {
+          background: #333;
+        }
+
+        &_hit {
+          background: red;
+        }
+
+        &_miss {
+          background: #eee;
+        }
+      }
+    }
+  }
+}
