@@ -6,6 +6,28 @@
     <title>Battleship</title>
   </head>
   <body>
-    <div class="root"></div>
+    <div class="root">
+      <h1 class="heading heading_primary">Battleship</h1>
+
+      <div class="gameboard__container">
+        <div class="gameboard__player">
+          <h2 class="heading heading_secondary">You</h2>
+          <div class="gameboard gameboard_player"></div>
+        </div>
+
+        <div class="gameboard__enemy">
+          <h2 class="heading heading_secondary">Enemy</h2>
+          <div class="gameboard gameboard_enemy"></div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button type="button" class="button">Place ships randomly</button>
+        <button type="button" class="button" disabled>Start</button>
+        <button type="button" class="button" style="display: none">
+          Restart
+        </button>
+      </div>
+    </div>
   </body>
 </html>
